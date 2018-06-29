@@ -1,0 +1,39 @@
+plugins {
+    id 'org.springframework.boot' version '2.0.3.RELEASE'
+}
+
+apply plugin: 'java'
+//spring的版本管理工具
+apply plugin: 'io.spring.dependency-management'
+
+group = 'org.kxw'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+jar {
+    baseName = 'kxw-springboot'
+    version = '0.0.1-SNAPSHOT'
+}
+
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter")
+    compile("org.springframework.boot:spring-boot-starter-web")
+
+    //热交换
+    compileOnly("org.springframework.boot:spring-boot-devtools")
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+//自定义版本
+ext['slf4j.version'] = '1.7.20'
+
+bootJar {
+    mainClassName = 'org.kxw.springboot.Application'
+}

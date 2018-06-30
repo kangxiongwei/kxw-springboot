@@ -6,6 +6,7 @@ const merge = require('webpack-merge');
 const webpackBaseConfig = require('./webpack.base.config.js');
 const fs = require('fs');
 const package = require('../package.json');
+const path = require('path');
 
 fs.open('./script/env.js', 'w', function(err, fd) {
     const buf = 'export default "development";';

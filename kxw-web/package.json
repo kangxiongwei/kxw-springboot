@@ -4,9 +4,9 @@
   "description": "Vue 2.0 admin management system template based on iView",
   "main": "index.js",
   "scripts": {
-    "init": "webpack --progress --config build/webpack.dev.config.js",
+    "init": "webpack --progress --config script/webpack.dev.config.js",
     "dev": "webpack-dev-server --content-base ./ --open --inline --hot --compress --config script/webpack.dev.config.js",
-    "build": "webpack --progress --hide-modules --config script/webpack.prod.config.js",
+    "prod": "webpack --progress --hide-modules --config script/webpack.prod.config.js",
     "lint": "eslint --fix --ext .js,.vue src",
     "test": "npm run lint"
   },

@@ -3,3 +3,6 @@ out/
 .idea/
 .gradle/
 *.iml
+
+src/main/resource/static/dist
+src/main/resource/static/index.html

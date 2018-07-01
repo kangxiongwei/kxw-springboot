@@ -12,8 +12,8 @@
                 </p>
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
-                        <FormItem prop="userName">
-                            <Input v-model="form.userName" placeholder="请输入用户名">
+                        <FormItem prop="username">
+                            <Input v-model="form.username" placeholder="请输入用户名">
                             <span slot="prepend">
                                     <Icon :size="16" type="person"></Icon>
                                 </span>
@@ -39,18 +39,18 @@
 </template>
 
 <script>
+    import {login} from '../api/http_api.js';
     import Cookies from 'js-cookie';
-    import axios from 'axios';
 
     export default {
         data () {
             return {
                 form: {
-                    userName: 'admin',
-                    password: ''
+                    username: Cookies.get('user'),
+                    password: Cookies.get('password')
                 },
                 rules: {
-                    userName: [
+                    username: [
                         {required: true, message: '账号不能为空', trigger: 'blur'}
                     ],
                     password: [
@@ -60,41 +60,23 @@
             };
         },
         methods: {
-            handleSubmit () {
-                this.$refs.loginForm.validate((valid) => {
+            async handleSubmit () {
+                this.$refs.loginForm.validate(async (valid) => {
                     if (valid) {
-                        let user = Cookies.get('user');
-                        let password = Cookies.get('password');
-                        if ((user === null || user === undefined) && (password === null || password === undefined)) {
-                            axios.post('http://localhost:8080/login', {}, {
-                                params: {
-                                    username: this.form.userName,
-                                    password: this.form.password
-                                },
-                                headers: {
-                                    'x-requested-with': 'XMLHttpRequest',
-                                    'Access-Control-Allow-Credentials': 'true'
-                                }
-                            }).then(res => {
-                                let auth = res.data.code;
-                                if (auth === 200) {
-                                    Cookies.set('user', this.form.userName);
-                                    Cookies.set('password', this.form.password);
-                                    this.$store.commit('setAvator', 'http://s6.sinaimg.cn/orignal/45f739a40fea9fe45c9d5');
-                                    if (this.form.userName === 'iview_admin') {
-                                        Cookies.set('access', 0);
-                                    } else {
-                                        Cookies.set('access', 1);
-                                    }
-                                    this.$router.push({
-                                        name: 'home_index'
-                                    });
-                                } else {
-                                    this.$Message.error('密码错误');
-                                }
-                            });
+                        //cookie中有值，就是用cookie中的值，否则使用表单的值
+                        let username = this.form.username;
+                        let password = this.form.password;
+                        let auth = await login(username, password);
+                        if (auth) {
+                            Cookies.set('user', username, {expires: 7}); //保留7天
+                            Cookies.set('password', password, {expires: 7});
+                            this.$store.commit('setAvator', 'http://s6.sinaimg.cn/orignal/45f739a40fea9fe45c9d5');
+                            Cookies.set('access', username === 'admin' ? 0 : 1); //设置权限
+                            this.$router.push({name: 'home_index'});
                         } else {
-                            this.$Message.error('密码错误');
+                            Cookies.remove('user');
+                            Cookies.remove('password');
+                            this.$Message.error('您输入的用户名或密码错误，请重新登录');
                         }
                     }
                 });

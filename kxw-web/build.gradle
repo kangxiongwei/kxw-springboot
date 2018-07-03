@@ -6,7 +6,7 @@ plugins {
 //调用npm run build命令的Gradle任务
 task npmBuild(type: NpmTask, dependsOn: npmInstall) {
     group = 'node'
-    args = ['run', rootProject.ext.profile]
+    args = ['run', 'prod']
 }
 
 //Gradle的java插件的jar任务，依赖npmBuild,即web子模块打jar包前必须运行npm run build

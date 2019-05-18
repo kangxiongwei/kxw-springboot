@@ -3,12 +3,4 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kxw.springboot.dao.UserDao">
 
-    <select id="getUser" resultType="org.kxw.springboot.model.User">
-        select Name as name,
-            Password as password,
-            Icon as icon
-        from bd_user where Name = #{username}
-    </select>
-
-
 </mapper>
